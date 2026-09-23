@@ -1,5 +1,5 @@
-#include "LGADSensor.hh"
-#include "LGADSensorHit.hh"
+#include "FiberSensor.hh"
+#include "FiberSensorHit.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4TouchableHistory.hh"
 #include "G4Track.hh"
@@ -17,7 +17,7 @@
 //----------------------------------------------------------------------//
 // Constructor                                                          //
 //----------------------------------------------------------------------//
-LGADSensor::LGADSensor(G4String name, G4String collection)
+FiberSensor::FiberSensor(G4String name, G4String collection)
     :G4VSensitiveDetector(name)
 {
     G4String HCname;
@@ -31,7 +31,7 @@ LGADSensor::LGADSensor(G4String name, G4String collection)
 //----------------------------------------------------------------------//
 // Constructor                                                          //
 //----------------------------------------------------------------------//
-LGADSensor::~LGADSensor() {
+FiberSensor::~FiberSensor() {
     ;
 }
 //----------------------------------------------------------------------//
@@ -41,9 +41,9 @@ LGADSensor::~LGADSensor() {
 //----------------------------------------------------------------------//
 // Constructor                                                          //
 //----------------------------------------------------------------------//
-void LGADSensor::Initialize(G4HCofThisEvent*HCE)
+void FiberSensor::Initialize(G4HCofThisEvent*HCE)
 {
-    hitsCollection = new LGADSensorHitsCollection(SensitiveDetectorName, collectionName[0]);
+    hitsCollection = new FiberSensorHitsCollection(SensitiveDetectorName, collectionName[0]);
     if(HCID<0) HCID = G4SDManager::GetSDMpointer()->GetCollectionID(hitsCollection);
     HCE->AddHitsCollection(HCID,hitsCollection);
 }
@@ -54,7 +54,7 @@ void LGADSensor::Initialize(G4HCofThisEvent*HCE)
 //----------------------------------------------------------------------//
 // Process the hits and fills the relevant information                  //
 //----------------------------------------------------------------------//
-G4bool LGADSensor::ProcessHits(G4Step*aStep,G4TouchableHistory*  /*ROhist*/) {
+G4bool FiberSensor::ProcessHits(G4Step*aStep,G4TouchableHistory*  /*ROhist*/) {
 
     G4Event *event = G4EventManager::GetEventManager()->GetEventManager()->GetNonconstCurrentEvent();
     if(event == NULL) false;
@@ -64,33 +64,23 @@ G4bool LGADSensor::ProcessHits(G4Step*aStep,G4TouchableHistory*  /*ROhist*/) {
   
     G4ThreeVector worldPos = preStepPoint->GetPosition();
     G4ThreeVector localPos = theTouchable->GetHistory()->GetTopTransform().TransformPoint(worldPos);
-    G4int detector = lgad->detId();
-    G4int layer = lgad->layerId();
-    G4int sensor = lgad->sensorId();
-    std::tuple<G4int, G4int, G4double> val = lgad->getPads(localPos);
-
-    G4int xpad = std::get<0>(val);
-    G4int ypad = std::get<1>(val);
-    G4double g = std::get<2>(val);
-    G4double energy = g * aStep->GetTotalEnergyDeposit();
+    G4int detector = fiber->detId();
+    G4int layer = fiber->layerId();
+    G4int sensor = fiber->fiberId();
+    
+    G4double energy = aStep->GetTotalEnergyDeposit();
     G4double genEnergy = aStep->GetPreStepPoint()->GetTotalEnergy();
     G4int genID = aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
     G4int genTrackID = aStep->GetTrack()->GetTrackID();
 
     //Simulating resolution
-    LGADSensorHit* aHit = new LGADSensorHit();
+    FiberSensorHit* aHit = new FiberSensorHit();
     aHit->SetEventNumber(enumber);
     aHit->SetDetectorID(detector);
     aHit->SetLayerID(layer);
-    aHit->SetLGADID(sensor);
+    aHit->SetFiberID(sensor);
     aHit->SetLocalPos(localPos);
     aHit->SetGlobalPos(worldPos);
-    aHit->SetGenTOA(preStepPoint->GetGlobalTime());
-    aHit->SetGenTOT(0);
-    aHit->SetTOA(0);
-    aHit->SetTOT(0);
-    aHit->SetPadx(xpad);
-    aHit->SetPady(ypad);
     aHit->SetEnergy(energy);
     aHit->SetGenEnergy(genEnergy);
     aHit->SetGenID(genID);
@@ -105,19 +95,19 @@ G4bool LGADSensor::ProcessHits(G4Step*aStep,G4TouchableHistory*  /*ROhist*/) {
 //----------------------------------------------------------------------//
 
 //----------------------------------------------------------------------//
-// Set lgad                                                             //
+// Set Fiber                                                             //
 //----------------------------------------------------------------------//
-void LGADSensor::setLGAD(LGAD *a) {
-    lgad = a;
+void FiberSensor::setFiber(Fiber *a) {
+    fiber = a;
 }
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 
 //----------------------------------------------------------------------//
-// Get lgad                                                             //
+// Get Fiber                                                             //
 //----------------------------------------------------------------------//
-LGAD * LGADSensor::getLGAD() {
-    return lgad;
+Fiber * FiberSensor::getFiber() {
+    return fiber;
 }
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
@@ -126,7 +116,7 @@ LGAD * LGADSensor::getLGAD() {
 //----------------------------------------------------------------------//
 // Needed by the parent class                                           //
 //----------------------------------------------------------------------//
-void LGADSensor::EndOfEvent(G4HCofThisEvent* /*HCE*/) {
+void FiberSensor::EndOfEvent(G4HCofThisEvent* /*HCE*/) {
     ;
 }
 //----------------------------------------------------------------------//

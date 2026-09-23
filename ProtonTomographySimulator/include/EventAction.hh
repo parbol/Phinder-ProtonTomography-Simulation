@@ -6,9 +6,8 @@
 #include "globals.hh"
 #include <vector>
 #include "Randomize.hh"
-#include "LGADSensorHit.hh"
+#include "FiberSensorHit.hh"
 #include "ConfigurationGeometry.hh"
-#include "LGADDigi.hh"
 
 #ifdef G4ANALYSIS_USE
 #include "AIDA/AIDA.h"
@@ -42,7 +41,7 @@ public:
     inline G4int GetVerbose() const {
         return verboseLevel;
     }
-    typedef std::vector<LGADSensorHitsCollection* > LGADSensorHitsCollections;
+    typedef std::vector<FiberSensorHitsCollection* > FiberSensorHitsCollections;
     CLHEP::HepRandomEngine* MyRndEngine;
     CLHEP::RandGauss* myGauss;
 };

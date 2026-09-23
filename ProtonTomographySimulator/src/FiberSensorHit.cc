@@ -1,4 +1,4 @@
-#include "LGADSensorHit.hh"
+#include "FiberSensorHit.hh"
 #include "G4ios.hh"
 #include "G4VVisManager.hh"
 #include "G4Circle.hh"
@@ -14,7 +14,7 @@
 //----------------------------------------------------------------------//
 // Declaration of the allocator                                         //
 //----------------------------------------------------------------------//
-G4Allocator<LGADSensorHit> LGADSensorHitAllocator;
+G4Allocator<FiberSensorHit> FiberSensorHitAllocator;
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 
@@ -22,7 +22,7 @@ G4Allocator<LGADSensorHit> LGADSensorHitAllocator;
 //----------------------------------------------------------------------//
 // Constructor without indicating layer ID                              //
 //----------------------------------------------------------------------//
-LGADSensorHit::LGADSensorHit() {
+FiberSensorHit::FiberSensorHit() {
     ;
 }
 //----------------------------------------------------------------------//
@@ -32,7 +32,7 @@ LGADSensorHit::LGADSensorHit() {
 //----------------------------------------------------------------------//
 // Destructor                                                           //
 //----------------------------------------------------------------------//
-LGADSensorHit::~LGADSensorHit() {
+FiberSensorHit::~FiberSensorHit() {
     ;
 }
 //----------------------------------------------------------------------//
@@ -42,18 +42,12 @@ LGADSensorHit::~LGADSensorHit() {
 //----------------------------------------------------------------------//
 // Constructor from another hit                                         //
 //----------------------------------------------------------------------//
-LGADSensorHit::LGADSensorHit(const LGADSensorHit &right): G4VHit() {
+FiberSensorHit::FiberSensorHit(const FiberSensorHit &right): G4VHit() {
     eventNumber = right.eventNumber;
     detectorID = right.detectorID;
     layerID = right.layerID;
-    lgadID = right.lgadID;
-    gentoa = right.gentoa;
-    gentot = right.gentot;
-    toa = right.toa;
-    tot = right.tot;
+    FiberID = right.FiberID;
     energy = right.energy;
-    padx = right.padx;
-    pady = right.pady;
     localPos = right.localPos;
     globalPos = right.globalPos;
     genEnergy = right.genEnergy;
@@ -67,18 +61,12 @@ LGADSensorHit::LGADSensorHit(const LGADSensorHit &right): G4VHit() {
 //----------------------------------------------------------------------//
 // Overloading = operator                                               //
 //----------------------------------------------------------------------//
-const LGADSensorHit& LGADSensorHit::operator=(const LGADSensorHit &right) {
+const FiberSensorHit& FiberSensorHit::operator=(const FiberSensorHit &right) {
     eventNumber = right.eventNumber;
     detectorID = right.detectorID;
     layerID = right.layerID;
-    lgadID = right.lgadID;
-    gentoa = right.gentoa;
-    gentot = right.gentot;
-    toa = right.toa;
-    tot = right.tot;
+    FiberID = right.FiberID;
     energy = right.energy;
-    padx = right.padx;
-    pady = right.pady;
     localPos = right.localPos;
     globalPos = right.globalPos;
     genEnergy = right.genEnergy;
@@ -93,7 +81,7 @@ const LGADSensorHit& LGADSensorHit::operator=(const LGADSensorHit &right) {
 //----------------------------------------------------------------------//
 // Overloading == operator                                               //
 //----------------------------------------------------------------------//
-int LGADSensorHit::operator==(const LGADSensorHit &/*right*/) const {
+int FiberSensorHit::operator==(const FiberSensorHit &/*right*/) const {
     return 0;
 }
 //----------------------------------------------------------------------//
@@ -103,9 +91,9 @@ int LGADSensorHit::operator==(const LGADSensorHit &/*right*/) const {
 //----------------------------------------------------------------------//
 // Associate measurements and units                                     //
 //----------------------------------------------------------------------//
-const std::map<G4String,G4AttDef>* LGADSensorHit::GetAttDefs() const {
+const std::map<G4String,G4AttDef>* FiberSensorHit::GetAttDefs() const {
     G4bool isNew;
-    std::map<G4String,G4AttDef>* store = G4AttDefStore::GetInstance("LGADSensorHit",isNew);
+    std::map<G4String,G4AttDef>* store = G4AttDefStore::GetInstance("FiberSensorHit",isNew);
     if (isNew) {
         G4String ID("ID");
         (*store)[ID] = G4AttDef(ID,"ID","Physics","","G4int");
@@ -129,16 +117,16 @@ const std::map<G4String,G4AttDef>* LGADSensorHit::GetAttDefs() const {
 //----------------------------------------------------------------------//
 // Create specials fuields inside the hit                               //
 //----------------------------------------------------------------------//
-std::vector<G4AttValue>* LGADSensorHit::CreateAttValues() const {
+std::vector<G4AttValue>* FiberSensorHit::CreateAttValues() const {
     std::vector<G4AttValue>* values = new std::vector<G4AttValue>;
 
-    values->push_back(G4AttValue("HitType","LGADSensorHit",""));
+    values->push_back(G4AttValue("HitType","FiberSensorHit",""));
 
     values->push_back
     (G4AttValue("ID",G4UIcommand::ConvertToString(layerID),""));
 
-    values->push_back
-    (G4AttValue("Time",G4BestUnit(gentoa,"Time"),""));
+    //values->push_back
+    //(G4AttValue("Time",G4BestUnit(gentoa,"Time"),""));
 
     values->push_back
     (G4AttValue("Energy",G4BestUnit(energy,"Energy"),""));
@@ -155,20 +143,14 @@ std::vector<G4AttValue>* LGADSensorHit::CreateAttValues() const {
 //----------------------------------------------------------------------//
 // Printing the information of the hit                                  //
 //----------------------------------------------------------------------//
-void LGADSensorHit::Print()
+void FiberSensorHit::Print()
 {
     G4cout << "\033[1;34m"
            << "*******************************Hit**********************************" << G4endl
            << "Event number: " << "\033[1;33m" << eventNumber << "\033[1;34m" << G4endl
            << "Detector: " << "\033[1;33m" << detectorID << "\033[1;34m" << G4endl
            << "Layer: " << "\033[1;33m" << layerID << "\033[1;34m" << G4endl
-           << "LGAD: " << "\033[1;33m" << lgadID << "\033[1;34m" << G4endl
-           << "TOA: " << "\033[1;33m" << toa/CLHEP::ns << "\033[1;34m" << G4endl
-           << "TOT: " << "\033[1;33m" << tot/CLHEP::ns << "\033[1;34m" << G4endl
-           << "padx: " << "\033[1;33m" << padx << "\033[1;34m" << G4endl
-           << "pady: " << "\033[1;33m" << pady << "\033[1;34m" << G4endl
-           << "genTOA: " << "\033[1;33m" << gentoa/CLHEP::ns << "\033[1;34m" << G4endl
-           << "genTOT: " << "\033[1;33m" << gentot/CLHEP::ns << "\033[1;34m" << G4endl
+           << "Fiber: " << "\033[1;33m" << FiberID << "\033[1;34m" << G4endl
            << "Energy: " << "\033[1;33m" << energy/CLHEP::GeV << "\033[1;34m" << G4endl
            << "Local pos: " << "\033[1;33m" << localPos.x()/CLHEP::cm << " " << localPos.y()/CLHEP::cm << " " << localPos.z()/CLHEP::cm << "\033[1;34m" << G4endl
            << "Local pos: " << "\033[1;33m" << globalPos.x()/CLHEP::cm << " " << globalPos.y()/CLHEP::cm << " " << globalPos.z()/CLHEP::cm << "\033[1;34m" << G4endl

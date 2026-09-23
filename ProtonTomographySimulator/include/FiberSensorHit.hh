@@ -1,5 +1,5 @@
-#ifndef LGADSensorHit_h
-#define LGADSensorHit_h 1
+#ifndef FiberSensorHit_h
+#define FiberSensorHit_h 1
 
 #include "G4VHit.hh"
 #include "G4THitsCollection.hh"
@@ -12,15 +12,15 @@
 class G4AttDef;
 class G4AttValue;
 
-class LGADSensorHit : public G4VHit
+class FiberSensorHit : public G4VHit
 {
 public:
 
-    LGADSensorHit();
-    virtual ~LGADSensorHit();
-    LGADSensorHit(const LGADSensorHit &right);
-    const LGADSensorHit& operator=(const LGADSensorHit &right);
-    int operator==(const LGADSensorHit &right) const;
+    FiberSensorHit();
+    virtual ~FiberSensorHit();
+    FiberSensorHit(const FiberSensorHit &right);
+    const FiberSensorHit& operator=(const FiberSensorHit &right);
+    int operator==(const FiberSensorHit &right) const;
 
     inline void *operator new(size_t);
     inline void operator delete(void *aHit);
@@ -36,15 +36,9 @@ private:
     G4int eventNumber;
     G4int detectorID;
     G4int layerID;
-    G4int lgadID;
-    G4double gentoa;
-    G4double gentot;
-    G4double toa;
-    G4double tot;
+    G4int FiberID;
     G4double energy;
     G4double genEnergy;
-    G4int padx;
-    G4int pady;
     G4int genID;
     G4int genTrackID;
     G4ThreeVector localPos;
@@ -70,47 +64,11 @@ public:
     inline G4int GetLayerID() const {
         return layerID;
     }
-     inline void SetLGADID(G4int z) {
-        lgadID = z;
+     inline void SetFiberID(G4int z) {
+        FiberID = z;
     }
-    inline G4int GetLGADID() const {
-        return lgadID;
-    }
-    inline void SetGenTOA(G4double t) {
-        gentoa = t;
-    }
-    inline G4double GetGenTOA() const {
-        return gentoa;
-    }
-    inline void SetGenTOT(G4double t) {
-        gentot = t;
-    }
-    inline G4double GetGenTOT() const {
-        return gentot;
-    }
-    inline void SetTOA(G4double t) {
-        toa = t;
-    }
-    inline G4double GetTOA() const {
-        return toa;
-    }
-    inline void SetTOT(G4double t) {
-        tot = t;
-    }
-    inline G4double GetTOT() const {
-        return tot;
-    }
-    inline void SetPadx(G4int t) {
-        padx = t;
-    }
-    inline G4int GetPadx() const {
-        return padx;
-    }
-    inline void SetPady(G4int t) {
-        pady = t;
-    }
-    inline G4int GetPady() const {
-        return pady;
+    inline G4int GetFiberID() const {
+        return FiberID;
     }
     inline void SetEnergy(G4double t) {
         energy = t;
@@ -156,9 +114,9 @@ public:
 //----------------------------------------------------------------------//
 // Collections of this                                                  //
 //----------------------------------------------------------------------//
-typedef G4THitsCollection<LGADSensorHit> LGADSensorHitsCollection;
+typedef G4THitsCollection<FiberSensorHit> FiberSensorHitsCollection;
 
-extern G4Allocator<LGADSensorHit> LGADSensorHitAllocator;
+extern G4Allocator<FiberSensorHit> FiberSensorHitAllocator;
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 
@@ -166,9 +124,9 @@ extern G4Allocator<LGADSensorHit> LGADSensorHitAllocator;
 //----------------------------------------------------------------------//
 // Redefinition of new operator                                         //
 //----------------------------------------------------------------------//
-inline void* LGADSensorHit::operator new(size_t) {
+inline void* FiberSensorHit::operator new(size_t) {
     void* aHit;
-    aHit = (void*)LGADSensorHitAllocator.MallocSingle();
+    aHit = (void*)FiberSensorHitAllocator.MallocSingle();
     return aHit;
 }
 //----------------------------------------------------------------------//
@@ -178,8 +136,8 @@ inline void* LGADSensorHit::operator new(size_t) {
 //----------------------------------------------------------------------//
 // Redefinition of delete operator                                      //
 //----------------------------------------------------------------------//
-inline void LGADSensorHit::operator delete(void* aHit) {
-    LGADSensorHitAllocator.FreeSingle((LGADSensorHit*) aHit);
+inline void FiberSensorHit::operator delete(void* aHit) {
+    FiberSensorHitAllocator.FreeSingle((FiberSensorHit*) aHit);
 }
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//

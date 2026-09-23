@@ -2,19 +2,18 @@
 #define Layer_h 1
 
 #include "GeomObject.hh"
-#include "LGAD.hh"
+#include "Fiber.hh"
 
 
 class Layer : GeomObject {
 
 public:
 
-    Layer(G4double, G4double, G4double, G4double, G4double, G4double, G4double, G4double, G4double, 
-          G4double, G4double, G4double, G4double, G4double, G4double, G4double, G4double, G4double, G4int, G4int);
+    Layer(G4double, G4double, G4double, G4double, G4double, G4double, G4double, G4double, G4double, G4int, G4int);
     
-    void AddSensor(LGAD *);
+    void AddSensor(Fiber *);
     
-    LGAD *GetSensor(G4int);
+    Fiber *GetSensor(G4int);
     
     G4int detId();
 
@@ -27,11 +26,9 @@ public:
     void Print();
 
 private:
-    std::vector<LGAD *> sensors;
+    std::vector<Fiber *> sensors;
     G4int ndetId, nlayerId;
-    G4double xPlatePos, yPlatePos, zPlatePos;
-    G4double xPlateRot, yPlateRot, zPlateRot;
-    G4double xPlateSize, yPlateSize, zPlateSize;
+    
 
 };
 

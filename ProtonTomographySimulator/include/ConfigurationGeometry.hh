@@ -1,16 +1,3 @@
-//------------------------------------------------------------//
-// |__   __/ __ \|  \/  | |  | | |    / ____|   /\   |  __ \  //
-//    | | | |  | | \  / | |  | | |   | |  __   /  \  | |  | | //
-//    | | | |  | | |\/| | |  | | |   | | |_ | / /\ \ | |  | | //
-//    | | | |__| | |  | | |__| | |___| |__| |/ ____ \| |__| | //
-//    |_|  \____/|_|  |_|\____/|______\_____/_/    \_\_____/  //
-//------------------------------------------------------------//
-// ConfigurationGeometry class:                               //                                                           
-//                                                            //
-// Parses json files with the configuration of the detectors. //
-//                                                            //
-//------------------------------------------------------------//
-
 #ifndef ConfigurationGeometry_h
 #define ConfigurationGeometry_h 1
 
@@ -26,7 +13,7 @@
 #include "Phantom.hh"
 #include "Detector.hh"
 #include "Layer.hh"
-#include "LGAD.hh"
+#include "Fiber.hh"
 
 
 class ConfigurationGeometry {
@@ -95,7 +82,6 @@ private:
     std::vector <Detector *> detectors;
     std::vector <Phantom *> phantoms;
     bool goodGeometry;
-    LGADSignalShape *signalShape;
 
     G4VSolid *coneVolume;
     G4LogicalVolume *conelogicalVolume;

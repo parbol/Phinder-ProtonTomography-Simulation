@@ -3,7 +3,7 @@
 
 #include "GeomObject.hh"
 #include <tuple>
-
+#include "G4Tubs.hh"
 
 class Fiber : GeomObject {
 
@@ -13,7 +13,7 @@ public:
          G4double, G4double, G4double, 
          G4double, G4double, G4double,
 	     G4int, G4int, G4int,
-         G4double, G4double, G4double,
+         G4double, G4double, G4double, G4double,
          G4String, G4String);
          
 
@@ -43,8 +43,11 @@ public:
 private:
     G4int ndetId, nlayerId, nfiberId;
     G4double coreRad, claddingRad, outerRad;
+    G4double length;
     G4String coreMaterial, claddingMaterial;
-    
+    G4LogicalVolume *logicalVolumeCore, *logicalVolumeCladding;
+    G4Tubs *solidVolumeCore, *solidVolumeCladding;
+    G4PVPlacement *physicalVolumeCore, *physicalVolumeCladding; 
 
 };
 

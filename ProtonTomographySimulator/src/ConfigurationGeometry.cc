@@ -1,15 +1,4 @@
 //------------------------------------------------------------//
-// |__   __/ __ \|  \/  | |  | | |    / ____|   /\   |  __ \  //
-//    | | | |  | | \  / | |  | | |   | |  __   /  \  | |  | | //
-//    | | | |  | | |\/| | |  | | |   | | |_ | / /\ \ | |  | | //
-//    | | | |__| | |  | | |__| | |___| |__| |/ ____ \| |__| | //
-//    |_|  \____/|_|  |_|\____/|______\_____/_/    \_\_____/  //
-//------------------------------------------------------------//
-// ConfigurationGeometry class:                               //                                                           
-//                                                            //
-// Parses json files with the configuration of the detectors. //
-//                                                            //
-//------------------------------------------------------------//
 
 #include "ConfigurationGeometry.hh"
 #include <json/json.h>
@@ -150,58 +139,35 @@ ConfigurationGeometry::ConfigurationGeometry(G4String file) {
                 G4double xSizeLayer_ = atof(root["Detectors"][idet]["Layers"][icoll]["xSizeLayer"].asString().c_str()) * CLHEP::cm;
                 G4double ySizeLayer_ = atof(root["Detectors"][idet]["Layers"][icoll]["ySizeLayer"].asString().c_str()) * CLHEP::cm;
                 G4double zSizeLayer_ = atof(root["Detectors"][idet]["Layers"][icoll]["zSizeLayer"].asString().c_str()) * CLHEP::cm;
-	        G4double xPosPlate = atof(root["Detectors"][idet]["Layers"][icoll]["xPosPlate"].asString().c_str()) * CLHEP::cm;
-                G4double yPosPlate = atof(root["Detectors"][idet]["Layers"][icoll]["yPosPlate"].asString().c_str()) * CLHEP::cm;
-                G4double zPosPlate = atof(root["Detectors"][idet]["Layers"][icoll]["zPosPlate"].asString().c_str()) * CLHEP::cm;
-                G4double xDirPlate = atof(root["Detectors"][idet]["Layers"][icoll]["xDirPlate"].asString().c_str()) * CLHEP::degree;
-                G4double yDirPlate = atof(root["Detectors"][idet]["Layers"][icoll]["yDirPlate"].asString().c_str()) * CLHEP::degree;
-                G4double zDirPlate = atof(root["Detectors"][idet]["Layers"][icoll]["zDirPlate"].asString().c_str()) * CLHEP::degree;
-                G4double xSizePlate_ = atof(root["Detectors"][idet]["Layers"][icoll]["xSizePlate"].asString().c_str()) * CLHEP::cm;
-                G4double ySizePlate_ = atof(root["Detectors"][idet]["Layers"][icoll]["ySizePlate"].asString().c_str()) * CLHEP::cm;
-                G4double zSizePlate_ = atof(root["Detectors"][idet]["Layers"][icoll]["zSizePlate"].asString().c_str()) * CLHEP::cm;
-	        Layer *layer = new Layer(xPosLayer, yPosLayer, zPosLayer, xDirLayer, yDirLayer, zDirLayer, xSizeLayer_, ySizeLayer_, zSizeLayer_, 
-				         xPosPlate, yPosPlate, zPosPlate, xDirPlate, yDirPlate, zDirPlate, xSizePlate_, ySizePlate_, zSizePlate_, idet, icoll);
-                //Sensors inside a layer ----------------------------------------------
-	            const Json::Value Sensors = root["Detectors"][idet]["Layers"][icoll]["Sensors"];
+	            Layer *layer = new Layer(xPosLayer, yPosLayer, zPosLayer, 
+                                        xDirLayer, yDirLayer, zDirLayer, 
+                                        xSizeLayer_, ySizeLayer_, zSizeLayer_, idet, icoll);
+                //Fibers inside a layer ----------------------------------------------
+	            const Json::Value Sensors = root["Detectors"][idet]["Layers"][icoll]["Fibers"];
                 for(G4int isens = 0; isens < Sensors.size(); ++isens) {
-                    G4double xSensPos = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["xPosSensor"].asString().c_str()) * CLHEP::cm;
-                    G4double ySensPos = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["yPosSensor"].asString().c_str()) * CLHEP::cm;
-                    G4double zSensPos = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["zPosSensor"].asString().c_str()) * CLHEP::cm;
-                    G4double xSensDir = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["xDirSensor"].asString().c_str()) * CLHEP::degree;
-                    G4double ySensDir = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["yDirSensor"].asString().c_str()) * CLHEP::degree;
-                    G4double zSensDir = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["zDirSensor"].asString().c_str()) * CLHEP::degree;
-                    G4double xSensSize = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["xSizeSensor"].asString().c_str()) * CLHEP::cm;
-                    G4double ySensSize = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["ySizeSensor"].asString().c_str()) * CLHEP::cm;
-                    G4double zSensSize = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["zSizeSensor"].asString().c_str()) * CLHEP::cm;
-                    G4double xETROCPos = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["xPosETROC"].asString().c_str()) * CLHEP::cm;
-                    G4double yETROCPos = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["yPosETROC"].asString().c_str()) * CLHEP::cm;
-                    G4double zETROCPos = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["zPosETROC"].asString().c_str()) * CLHEP::cm;
-                    G4double xETROCDir = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["xDirETROC"].asString().c_str()) * CLHEP::degree;
-                    G4double yETROCDir = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["yDirETROC"].asString().c_str()) * CLHEP::degree;
-                    G4double zETROCDir = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["zDirETROC"].asString().c_str()) * CLHEP::degree;
-                    G4double xETROCSize = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["xSizeETROC"].asString().c_str()) * CLHEP::cm;
-                    G4double yETROCSize = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["ySizeETROC"].asString().c_str()) * CLHEP::cm;
-                    G4double zETROCSize = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["zSizeETROC"].asString().c_str()) * CLHEP::cm;
-		    G4double interPadx = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["interPadx"].asString().c_str()) * CLHEP::cm;
-                    G4double interPady = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["interPady"].asString().c_str()) * CLHEP::cm;
-                    G4double xborder = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["xborder"].asString().c_str()) * CLHEP::cm;
-                    G4double yborder = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["yborder"].asString().c_str()) * CLHEP::cm;
-                    G4int nPadx = atoi(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["nPadx"].asString().c_str());
-                    G4int nPady = atoi(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["nPady"].asString().c_str());
-                    G4double chargeThreshold = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["chargeThreshold"].asString().c_str());
-                    G4double noise = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["noise"].asString().c_str());
-                    G4double tdcSigma = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["tdcSigma"].asString().c_str());
-                    G4double gain = atof(root["Detectors"][idet]["Layers"][icoll]["Sensors"][isens]["gain"].asString().c_str());
-                    LGAD *sensor = new LGAD(xSensPos, ySensPos, zSensPos, 
-                                            xSensDir, ySensDir, zSensDir,
-                                            xSensSize, ySensSize, zSensSize,
-					    xETROCPos, yETROCPos, zETROCPos,
-                                            xETROCDir, yETROCDir, zETROCDir,
-                                            xETROCSize, yETROCSize, zETROCSize,
-                                            nPadx, nPady, interPadx, interPady,
-                                            xborder, yborder, chargeThreshold,
-                                            noise, tdcSigma, gain, idet, icoll, isens);
-                    layer->AddSensor(sensor);
+                    G4double xSensPos = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["xPosSensor"].asString().c_str()) * CLHEP::cm;
+                    G4double ySensPos = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["yPosSensor"].asString().c_str()) * CLHEP::cm;
+                    G4double zSensPos = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["zPosSensor"].asString().c_str()) * CLHEP::cm;
+                    G4double xSensDir = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["xDirSensor"].asString().c_str()) * CLHEP::degree;
+                    G4double ySensDir = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["yDirSensor"].asString().c_str()) * CLHEP::degree;
+                    G4double zSensDir = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["zDirSensor"].asString().c_str()) * CLHEP::degree;
+                    G4double xSensSize = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["xSizeSensor"].asString().c_str()) * CLHEP::cm;
+                    G4double ySensSize = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["ySizeSensor"].asString().c_str()) * CLHEP::cm;
+                    G4double zSensSize = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["zSizeSensor"].asString().c_str()) * CLHEP::cm;
+                    G4double coreRad = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["coreRadius"].asString().c_str()) * CLHEP::cm;
+                    G4double claddingRad = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["claddingRadius"].asString().c_str()) * CLHEP::cm;
+                    G4double outerRad = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["outerRadius"].asString().c_str()) * CLHEP::cm;
+                    G4double length = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["length"].asString().c_str()) * CLHEP::cm;
+                    G4String coreMaterial = root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["coreMaterial"].asString().c_str();
+                    G4String claddingMaterial = root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["claddingMaterial"].asString().c_str();
+
+                    Fiber *fiber = new Fiber(xSensPos, ySensPos, zSensPos, 
+                                             xSensDir, ySensDir, zSensDir,
+                                             xSensSize, ySensSize, zSensSize,
+                                             idet, icoll, isens,
+                                             coreRad, claddingRad, outerRad, length,
+                                            coreMaterial, claddingMaterial);
+                    layer->AddSensor(fiber);
                     G4String label = G4String(std::to_string(idet)) + G4String("_") + 
                                      G4String(std::to_string(icoll)) + G4String("_") + 
                                      G4String(std::to_string(isens)); 

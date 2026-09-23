@@ -8,22 +8,10 @@
 Layer::Layer(G4double xPos, G4double yPos, G4double zPos, 
              G4double xRot, G4double yRot, G4double zRot,
              G4double xSize, G4double ySize, G4double zSize,
-	     G4double xPosPlate, G4double yPosPlate, G4double zPosPlate,
-             G4double xRotPlate, G4double yRotPlate, G4double zRotPlate,
-             G4double xSizePlate, G4double ySizePlate, G4double zSizePlate,
              G4int ndet, G4int nlayer) :
              GeomObject(xPos, yPos, zPos, xRot, yRot, zRot, xSize, ySize, zSize) {
                 ndetId = ndet;
-                nlayerId = nlayer;
-		xPlatePos = xPosPlate;
-		yPlatePos = yPosPlate;
-		zPlatePos = zPosPlate;
-		xPlateRot = xRotPlate;
-		yPlateRot = yRotPlate;
-		zPlateRot = zRotPlate;
-		xPlateSize = xSizePlate;
-		yPlateSize = ySizePlate;
-		zPlateSize = zSizePlate;
+                nlayerId = nlayer;	
              };
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
@@ -32,7 +20,7 @@ Layer::Layer(G4double xPos, G4double yPos, G4double zPos,
 //----------------------------------------------------------------------//
 // Add a layer to the detector                                          //
 //----------------------------------------------------------------------//
-void Layer::AddSensor(LGAD *l) {
+void Layer::AddSensor(Fiber *l) {
 	sensors.push_back(l);
 }
 //----------------------------------------------------------------------//
@@ -42,7 +30,7 @@ void Layer::AddSensor(LGAD *l) {
 //----------------------------------------------------------------------//
 // Return layer                                                         //
 //----------------------------------------------------------------------//
-LGAD * Layer::GetSensor(G4int a) {
+Fiber * Layer::GetSensor(G4int a) {
 	return sensors.at(a);
 }
 //----------------------------------------------------------------------//
@@ -79,20 +67,11 @@ void Layer::createG4Objects(G4String name, G4LogicalVolume *mother,
                                        logicalVolume, layerPhysicalName,
                                        mother, false, 0, true);
     
-    //This is the plate 
-    G4String layerStrName = layerName + G4String("_str");
-    G4String layerStrPhysName = layerPhysicalName + G4String("_str");
-    G4Box *layerStrSolid = new G4Box(layerStrName, xPlateSize/2.0, yPlateSize/2.0, zPlateSize/2.0);
-    G4LogicalVolume *layerStrLog = new G4LogicalVolume(layerStrSolid, materials["carbon"], layerStrName);
-    G4VPhysicalVolume *layerStrVol = new G4PVPlacement(0, G4ThreeVector(xPlatePos,yPlatePos,zPlatePos), layerStrLog, layerStrPhysName,
-                                                        mother, false, 0, true);
+    
     G4VisAttributes *attlog = new G4VisAttributes(false);
     attlog->SetVisibility(false);
     logicalVolume->SetVisAttributes(attlog);
-    G4Colour silver(155.0/256.0, 155.0/256.0, 155.0/256.0);
-    G4VisAttributes *attlayer = new G4VisAttributes(silver);
-    layerStrLog->SetVisAttributes(attlayer);
-   
+  
 }
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
