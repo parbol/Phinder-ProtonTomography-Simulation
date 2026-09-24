@@ -19,7 +19,7 @@ if [ $HOSTNAME == "Leibniz" ]; then
     source $G4INSTALLDIR/bin/geant4.sh
     export PYTHONPATH=$G4WORKDIR/
     export QT_QPA_PLATFORM=xcb
-    source /home/pablo/Documentos/software/root_v6.36.00-install/bin/thisroot.sh
+    source /home/pablo/Documentos/software/root-6.36.10-install/bin/thisroot.sh
 fi
 
 
